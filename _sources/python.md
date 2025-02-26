@@ -25,3 +25,5 @@ conda activate CSS
 > **Note**: at the time I wrote this, I did not re-run all codes that will be used during the course. Us such, there might be some missing packages, but we will see that as we proceed.
 
 Now we are ready to get started!
+
+At [this page](https://github.com/lorenzodallamico/CSS/tree/main) you can also find the data and source codes that are used in the course, as well as all notebooks.
