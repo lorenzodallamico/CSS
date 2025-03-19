@@ -63,6 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '02_rdn/net3';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5. Spectral properties of random graphs" href="../04_perc/spectral.html" />
     <link rel="prev" title="3. Basics of network analysis" href="../01_intro/net2.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -179,6 +180,11 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Random generative models</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Random models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Network robustness</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../04_perc/spectral.html">5. Spectral properties of random graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_perc/percolation.html">6. Robustness</a></li>
 </ul>
 
     </div>
@@ -403,7 +409,9 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="cell docutils container">
+  <section id="random-models">
+<h1><span class="section-number">4. </span>Random models<a class="headerlink" href="#random-models" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
@@ -418,8 +426,6 @@
 </div>
 </div>
 </div>
-<section id="random-models">
-<h1><span class="section-number">4. </span>Random models<a class="headerlink" href="#random-models" title="Link to this heading">#</a></h1>
 <section id="erdos-renyi-random-graph">
 <h2><span class="section-number">4.1. </span>Erdos-Renyi random graph<a class="headerlink" href="#erdos-renyi-random-graph" title="Link to this heading">#</a></h2>
 <p>We consider an instance of the Erdos-Renyi model with $n$ nodes and connection probability equal to $p$. We first compare the empirical degree distribution with the theoretical prediction.</p>
@@ -692,8 +698,32 @@ Normalized assortativity: 0.9252025628700059
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nx</span><span class="o">.</span><span class="n">degree_assortativity_coefficient</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.029185953538554996
+</pre></div>
+</div>
+</div>
+</div>
 <section id="id3">
 <h3><span class="section-number">4.4.1. </span>Degree distribution<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">degree</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9.996666666666666
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">degree</span><span class="p">())</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
@@ -908,6 +938,15 @@ Normalized assortativity: 0.9252025628700059
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title"><span class="section-number">3. </span>Basics of network analysis</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="../04_perc/spectral.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Spectral properties of random graphs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
