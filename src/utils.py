@@ -18,7 +18,7 @@ def load_graph(filename, directory, weighted = True, symmetric = True):
         * weighted (bool): if True (default) it returns a  weighted adjacency matrix and an unweighted one otherwise
         * symmetric (bool): it True (default) it forces the adjacency matrix to be symmetric
         
-    Output:<
+    Output:
         * A (sparse array): graph adjacency matrix
     '''
 
@@ -80,10 +80,26 @@ def SpectralRadiusNB(A):
         * ρ (float)
     '''
 
+    Bp = GetBp(A)
+    
+    ρB, _  = eigs(Bp, k = 1, which = 'LM')
+    return ρB[0].real
+
+
+def GetBp(A):
+    '''This function build the smaller Bp matrix to compute the eigenvalues of the non-backtrakcin
+    Use: Bp = GetBp(A)
+    
+    Input:
+        * A (scipy sparse array): graph adjacency matrix
+        
+    Outoput:
+        * Bp (scipy sparse array)
+    '''
+
     n, _ = A.shape
     D = diags(A@np.ones(n))
     Id = diags(np.ones(n))
     Bp = bmat([[A, -Id], [D-Id, None]])
 
-    ρB, _  = eigs(Bp, k = 1, which = 'LM')
-    return ρB[0].real
+    return Bp
