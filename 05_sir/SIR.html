@@ -1,0 +1,1033 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>7. Epidemic spreading on graphs &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '05_sir/SIR';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="6. Robustness" href="../04_perc/percolation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="My sample book - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="My sample book - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Complessita’ nei Sistemi Sociali: codebook
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python.html">1. Setting up Python</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intro to networks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../01_intro/net1.html">2. Loading a graph in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01_intro/net2.html">3. Basics of network analysis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Random generative models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../02_rdn/net3.html">4. Random models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Network robustness</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../04_perc/spectral.html">5. Spectral properties of random graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_perc/percolation.html">6. Robustness</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Epidemics on networks</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">7. Epidemic spreading on graphs</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/lorenzodallamico/CSS" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/lorenzodallamico/CSS/issues/new?title=Issue%20on%20page%20%2F05_sir/SIR.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/05_sir/SIR.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Epidemic spreading on graphs</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-an-epidemic-spreading-on-a-graph">7.1. Running an epidemic spreading on a graph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#epidemic-threshold">7.2. Epidemic threshold</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#role-of-the-degree">7.3. Role of the degree</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vaccination">7.3.1. Vaccination</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-role-of-weak-ties">7.4. The role of weak ties</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">7.4.1. Vaccination</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-role-of-communities">7.5. The role of communities</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="epidemic-spreading-on-graphs">
+<h1><span class="section-number">7. </span>Epidemic spreading on graphs<a class="headerlink" href="#epidemic-spreading-on-graphs" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">EoN</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">src.generateGraphs</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">src.perc</span> <span class="kn">import</span> <span class="n">jaccard_iterators</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">legacy</span><span class="o">=</span><span class="s1">&#39;1.25&#39;</span><span class="p">)</span>
+
+<span class="n">fig_directory</span> <span class="o">=</span> <span class="s1">&#39;../../Note/Notes/Figures/06_epi/&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p><strong>NOTE</strong>: you must run the following command since <code class="docutils literal notranslate"><span class="pre">EoN</span></code> is not part of the environment</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>CSS
+pip<span class="w"> </span>install<span class="w"> </span>EoN
+</pre></div>
+</div>
+</div></blockquote>
+<section id="running-an-epidemic-spreading-on-a-graph">
+<h2><span class="section-number">7.1. </span>Running an epidemic spreading on a graph<a class="headerlink" href="#running-an-epidemic-spreading-on-a-graph" title="Link to this heading">#</a></h2>
+<p>To run a simulation of an epidemic spreading on a graph, we use the <code class="docutils literal notranslate"><span class="pre">EoN</span></code> (epidemics on networks) package which provides very efficient packages to do so. We first consider an Erdos-Renyi random graph and look at the curves $S_(t), I(t), R(t)$.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># size and avreage degree</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span> <span class="mi">30</span>
+
+<span class="c1"># get the graph</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">fastER</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">from_scipy_sparse_array</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+<span class="c1">#  infection rate, recovery rate, temporal resolution</span>
+<span class="n">β</span><span class="p">,</span> <span class="n">μ</span><span class="p">,</span> <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.3</span>
+
+<span class="c1"># select the seeds</span>
+<span class="n">n_seeds</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">n_seeds</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># run the simulation</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">tmax</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># PLOT</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">S</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;crimson&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Susceptible&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">I</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;forestgreen&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Infected&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">R</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;dodgerblue&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Recovered&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">24</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">24</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/6ba291ed512807f4847ae61d14bd08342271563d1f043f16d4dad19ce53655d3.png" src="../_images/6ba291ed512807f4847ae61d14bd08342271563d1f043f16d4dad19ce53655d3.png" />
+</div>
+</div>
+</section>
+<section id="epidemic-threshold">
+<h2><span class="section-number">7.2. </span>Epidemic threshold<a class="headerlink" href="#epidemic-threshold" title="Link to this heading">#</a></h2>
+<p>We analyze the epidemic burden (i.e. the fraction of individuals that at the end of the spreading are not susceptible and hence that were hit by the epidemic) as a function of the transmissibility parameter. We consider a dense and a sparse graph from the configuration model and we infect $20$ nodes at the beginning with a probability proportional to their degree. This is to ensure a vanishing probabability that the epidemic dies out if the parameters $\beta$ and $\mu$ are so that $R_0 &gt; 1$.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">###########################################</span>
+<span class="c1">############ DENSE GRAPH ##################</span>
+<span class="c1">###########################################</span>
+
+<span class="c1"># size and average degree</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span>
+
+<span class="c1"># generate a heterogeneous degree sequence</span>
+<span class="n">θ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">**</span><span class="mi">6</span>
+
+<span class="c1"># generate the graph and the adjacency matrix</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">expected_degree_graph</span><span class="p">(</span><span class="n">θ</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">θ</span><span class="p">)</span><span class="o">*</span><span class="n">d</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">deg_sequence</span> <span class="o">=</span> <span class="n">A</span><span class="nd">@np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># we infect r nodes with a probability proportional to their degree</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">r</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">deg_sequence</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">deg_sequence</span><span class="p">))</span>
+
+<span class="c1"># we try several values of β </span>
+<span class="n">βv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+
+<span class="n">res_dense</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">β</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">βv</span><span class="p">):</span>
+
+    <span class="c1"># print progress bar</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%-25s</span><span class="s2">] </span><span class="si">%d%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">βv</span><span class="p">)</span><span class="o">*</span><span class="mi">25</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">βv</span><span class="p">))</span><span class="o">*</span><span class="mi">100</span><span class="p">),</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># run the simulation    </span>
+    <span class="n">t</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">tmax</span> <span class="o">=</span> <span class="mi">500</span><span class="p">)</span>
+
+    <span class="c1"># we save the fraction of people that have been &quot;touched&quot; by the epidemic</span>
+    <span class="n">res_dense</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">S</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+
+
+<span class="c1"># ###########################################</span>
+<span class="c1"># ############ SPARSE GRAPH #################</span>
+<span class="c1"># ###########################################</span>
+
+<span class="c1"># size and average degree</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span>
+
+<span class="c1"># generate a heterogeneous degree sequence</span>
+<span class="n">θ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">**</span><span class="mi">6</span>
+
+<span class="c1"># generate the graph and the adjacency matrix</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">expected_degree_graph</span><span class="p">(</span><span class="n">θ</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">θ</span><span class="p">)</span><span class="o">*</span><span class="n">d</span><span class="p">)</span>
+<span class="n">A_sparse</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">deg_sequence</span> <span class="o">=</span> <span class="n">A_sparse</span><span class="nd">@np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># we infect r nodes with a probability proportional to their degree</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">r</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">deg_sequence</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">deg_sequence</span><span class="p">))</span>
+
+<span class="c1"># we try several values of β </span>
+<span class="n">βv_sparse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+
+<span class="n">res_sparse</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">β</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">βv_sparse</span><span class="p">):</span>
+    <span class="c1"># print progress bar</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%-25s</span><span class="s2">] </span><span class="si">%d%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">βv_sparse</span><span class="p">)</span><span class="o">*</span><span class="mi">25</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">βv_sparse</span><span class="p">))</span><span class="o">*</span><span class="mi">100</span><span class="p">),</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># run the simulation    </span>
+    <span class="n">t</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">tmax</span> <span class="o">=</span> <span class="mi">500</span><span class="p">)</span>
+
+    <span class="c1"># we save the fraction of people that have been &quot;touched&quot; by the epidemic</span>
+    <span class="n">res_sparse</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">S</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[========================&gt;] 100%
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># PLOT</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">ρA</span> <span class="o">=</span> <span class="n">SpectralRadius</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">ρB</span> <span class="o">=</span> <span class="n">SpectralRadiusNB</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">βv</span><span class="o">/</span><span class="n">μ</span><span class="p">,</span> <span class="n">res_dense</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;tomato&#39;</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">markeredgecolor</span> <span class="o">=</span> <span class="s1">&#39;darkred&#39;</span><span class="p">,</span> <span class="n">markeredgewidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">ρA</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$1/\rho(A)$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">ρB</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$1/(\rho(B)-1)$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$R_0 = \beta/\mu$&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Burden&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span> <span class="n">loc</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">ρA</span> <span class="o">=</span> <span class="n">SpectralRadius</span><span class="p">(</span><span class="n">A_sparse</span><span class="p">)</span>
+<span class="n">ρB</span> <span class="o">=</span> <span class="n">SpectralRadiusNB</span><span class="p">(</span><span class="n">A_sparse</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">βv_sparse</span><span class="o">/</span><span class="n">μ</span><span class="p">,</span> <span class="n">res_sparse</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;tomato&#39;</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">markeredgecolor</span> <span class="o">=</span> <span class="s1">&#39;darkred&#39;</span><span class="p">,</span> <span class="n">markeredgewidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">ρA</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">ρB</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$R_0 = \beta/\mu$&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fig_directory</span><span class="si">}</span><span class="s1">perc_th.pdf&#39;</span><span class="p">,</span> <span class="n">dpi</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c86e2771746bf68d19512297e2dd02a1694964b910a233be572f621cd0f59a41.png" src="../_images/c86e2771746bf68d19512297e2dd02a1694964b910a233be572f621cd0f59a41.png" />
+</div>
+</div>
+</section>
+<section id="role-of-the-degree">
+<h2><span class="section-number">7.3. </span>Role of the degree<a class="headerlink" href="#role-of-the-degree" title="Link to this heading">#</a></h2>
+<p>Here we show the hitting time (i.e. the time at which an initially susceptible node gets infected) as a function of its degree on a graph generated from the configuration model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">30000</span><span class="p">,</span> <span class="mi">30</span>
+
+<span class="c1"># generate a heterogeneous degree sequence</span>
+<span class="n">θ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">**</span><span class="mi">6</span>
+<span class="n">deg_sequence</span> <span class="o">=</span> <span class="n">θ</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">θ</span><span class="p">)</span><span class="o">*</span><span class="n">d</span>
+
+<span class="c1"># generate the graph and the adjacency matrix</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">expected_degree_graph</span><span class="p">(</span><span class="n">deg_sequence</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="mi">10</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="n">β</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">μ</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">.1</span>
+<span class="c1"># run the simulation    </span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">return_full_data</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+
+<span class="c1"># compute the hitting time</span>
+<span class="n">hitting_time</span><span class="p">,</span> <span class="n">deg</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">A</span><span class="nd">@np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">node_history</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">hitting_time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">node_history</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">deg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">deg</span><span class="p">,</span> <span class="n">hitting_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">deg</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">hitting_time</span><span class="p">)</span>
+
+<span class="c1"># Store data (serialize)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../../Plots/Files/deg_sir.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">([</span><span class="n">all_d</span><span class="p">,</span> <span class="n">hitting_time</span><span class="p">,</span> <span class="n">deg</span><span class="p">],</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">deg</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">all_d</span><span class="p">),</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">hitting_time</span><span class="p">[</span><span class="n">deg</span> <span class="o">==</span> <span class="n">x</span><span class="p">]))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_d</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;mediumorchid&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;plum&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;${\rm log}(h)$&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">24</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">17</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;${\rm log}(d_i)$&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">24</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">17</span><span class="p">)</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/e1638f4b24c62f0f3ef56bc080315519cec91688e8c7ec9609a38a93f000d0a1.png" src="../_images/e1638f4b24c62f0f3ef56bc080315519cec91688e8c7ec9609a38a93f000d0a1.png" />
+</div>
+</div>
+<section id="vaccination">
+<h3><span class="section-number">7.3.1. </span>Vaccination<a class="headerlink" href="#vaccination" title="Link to this heading">#</a></h3>
+<p>We now show an vaccination intervention in which a fraction of nodes cannot become infected. We compare the epidemic curve without any vaccination campaing, with a random vaccination campaign and targeting the nodes with higher degree. We model the vaccination by setting some nodes directly to the recovered state at the beginning of the simulation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the graph</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">50000</span><span class="p">,</span> <span class="mi">30</span>
+<span class="n">θ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">**</span><span class="mi">6</span>
+<span class="n">deg_sequence</span> <span class="o">=</span> <span class="n">θ</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">θ</span><span class="p">)</span><span class="o">*</span><span class="n">d</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">expected_degree_graph</span><span class="p">(</span><span class="n">deg_sequence</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">μ</span> <span class="o">=</span> <span class="mf">1.2</span>
+<span class="n">β</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">vaccinated_fraction</span> <span class="o">=</span> <span class="mf">0.2</span>
+
+<span class="c1"># these are the seeds</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="mi">10</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">deg_sequence</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">deg_sequence</span><span class="p">))</span>
+
+<span class="c1">### No vaccination</span>
+<span class="n">t_novax</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">I_novax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">tmax</span> <span class="o">=</span> <span class="mi">500</span><span class="p">)</span>
+
+<span class="c1">### Random vaccination</span>
+<span class="n">vaccinated_rdn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">r</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">vaccinated_fraction</span><span class="p">),</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">t_rdnvax</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">I_rdnvax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">initial_recovereds</span> <span class="o">=</span> <span class="n">vaccinated_rdn</span><span class="p">,</span> <span class="n">tmax</span> <span class="o">=</span> <span class="mi">500</span><span class="p">)</span>
+
+<span class="c1">### Targeted vaccination</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">deg_sequence</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">r</span><span class="p">)]</span>
+<span class="n">vaccinated_target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">r</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">vaccinated_fraction</span><span class="p">),</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="n">t_target_vax</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">I_target_vax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">initial_recovereds</span> <span class="o">=</span> <span class="n">vaccinated_target</span><span class="p">,</span> <span class="n">tmax</span> <span class="o">=</span> <span class="mi">500</span><span class="p">)</span>
+
+<span class="c1"># Store data (serialize)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../../Plots/Files/vax.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="n">t_novax</span><span class="p">,</span> <span class="n">t_rdnvax</span><span class="p">,</span> <span class="n">t_target_vax</span><span class="p">,</span> <span class="n">I_novax</span><span class="p">,</span> <span class="n">I_rdnvax</span><span class="p">,</span> <span class="n">I_target_vax</span><span class="p">],</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_novax</span><span class="p">,</span> <span class="n">I_novax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#c77dff&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;No vaccination&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">t_novax</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">I_novax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#c77dff&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_rdnvax</span><span class="p">,</span> <span class="n">I_rdnvax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#57cc99&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Random vaccination&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">t_rdnvax</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">I_rdnvax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#57cc99&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_target_vax</span><span class="p">,</span> <span class="n">I_target_vax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#bb3e03&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Target vaccination&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;-.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">t_target_vax</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">I_target_vax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#bb3e03&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/653edba47198ec7bc70f1c4b66fdff2d2088847815f8624ae55140b39a29adec.png" src="../_images/653edba47198ec7bc70f1c4b66fdff2d2088847815f8624ae55140b39a29adec.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="the-role-of-weak-ties">
+<h2><span class="section-number">7.4. </span>The role of weak ties<a class="headerlink" href="#the-role-of-weak-ties" title="Link to this heading">#</a></h2>
+<p>We repeat the experiment on a set of Watts-Strogatz random graphs for different rewiring probabilities $p$.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">50000</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">β</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">μ</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">.1</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">pv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">0.3</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">I</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pv</span><span class="p">:</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">watts_strogatz_graph</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="n">t_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">I_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">return_full_data</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t_</span><span class="p">)</span>
+    <span class="n">I</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">I_</span><span class="p">)</span>
+
+
+<span class="c1"># Store data (serialize)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../../Plots/Files/WS.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">([</span><span class="n">pv</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">I</span><span class="p">],</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;231942&quot;</span><span class="p">,</span><span class="s2">&quot;5e548e&quot;</span><span class="p">,</span><span class="s2">&quot;9f86c0&quot;</span><span class="p">,</span><span class="s2">&quot;be95c4&quot;</span><span class="p">,</span><span class="s2">&quot;e0b1cb&quot;</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">t_</span><span class="p">,</span> <span class="n">I_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">I</span><span class="p">)):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_</span><span class="p">,</span> <span class="n">I_</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;p = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">pv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Fraction of infected&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/1886f1138fe616b2bdee0a9c91c4928e44803fc6f8f6aa4cdc71d5dcac4c1cde.png" src="../_images/1886f1138fe616b2bdee0a9c91c4928e44803fc6f8f6aa4cdc71d5dcac4c1cde.png" />
+</div>
+</div>
+<section id="id1">
+<h3><span class="section-number">7.4.1. </span>Vaccination<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>In this case we compute the overlap for each edge $(ij)$ as</p>
+<p>\begin{align}
+O_{ij} = \frac{|\partial_i\cap\partial_j|}{|\partial_i\cup\partial_j|}
+\end{align}</p>
+<p>and assign to each node a score $s_i = {\rm min}<em>j O</em>{ij}$. A low $s_i$ implies that the node $i$ has a weak tie. From this, we vaccinate nodes with a probability proportional to $1/s_i$ and compare the results with targeted vaccination.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate the graph</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">watts_strogatz_graph</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+<span class="c1"># compute the overal for all edges and the overlap score for all nodes   </span>
+<span class="n">EL</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">())</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">])</span>
+<span class="n">EL</span><span class="p">[</span><span class="s1">&#39;overlap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">EL</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">jaccard_iterators</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">i</span><span class="p">),</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">j</span><span class="p">)),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">min_ov</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">EL</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">overlap</span><span class="p">)</span>
+
+<span class="c1">### Run the simulation</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="mi">10</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">deg_sequence</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">deg_sequence</span><span class="p">))</span>
+
+<span class="c1">### No vaccination</span>
+<span class="n">t_novax</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">I_novax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">tmax</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">)</span>
+
+<span class="c1">### Random vaccination</span>
+<span class="n">vaccinated_rdn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">r</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">vaccinated_fraction</span><span class="p">),</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">t_rdnvax</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">I_rdnvax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">initial_recovereds</span> <span class="o">=</span> <span class="n">vaccinated_rdn</span><span class="p">,</span> <span class="n">tmax</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">)</span>
+
+<span class="c1">### Targeted vaccination</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mf">1e-3</span><span class="o">+</span><span class="n">min_ov</span><span class="p">[</span><span class="n">x</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="p">])</span>
+<span class="n">vaccinated_target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">r</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">vaccinated_fraction</span><span class="p">),</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="n">t_target_vax</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">I_target_vax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">initial_recovereds</span> <span class="o">=</span> <span class="n">vaccinated_target</span><span class="p">,</span> <span class="n">tmax</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">)</span>
+
+<span class="c1"># Store data (serialize)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../../Plots/Files/vax_WS.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="n">t_novax</span><span class="p">,</span> <span class="n">t_rdnvax</span><span class="p">,</span> <span class="n">t_target_vax</span><span class="p">,</span> <span class="n">I_novax</span><span class="p">,</span> <span class="n">I_rdnvax</span><span class="p">,</span> <span class="n">I_target_vax</span><span class="p">],</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_novax</span><span class="p">,</span> <span class="n">I_novax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#c77dff&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;No vaccination&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">t_novax</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">I_novax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#c77dff&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_rdnvax</span><span class="p">,</span> <span class="n">I_rdnvax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#57cc99&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Random vaccination&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">t_rdnvax</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">I_rdnvax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#57cc99&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_target_vax</span><span class="p">,</span> <span class="n">I_target_vax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#bb3e03&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Targeted vaccination&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;-.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">t_target_vax</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">I_target_vax</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#bb3e03&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">)</span>
+<span class="c1"># plt.xlim(0,100)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b25fba90055221ea3ad0ff911ab17cfde7a78fd4e0daa992f4b45a6bfd5d38b2.png" src="../_images/b25fba90055221ea3ad0ff911ab17cfde7a78fd4e0daa992f4b45a6bfd5d38b2.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="the-role-of-communities">
+<h2><span class="section-number">7.5. </span>The role of communities<a class="headerlink" href="#the-role-of-communities" title="Link to this heading">#</a></h2>
+<p>We now run a simulation of an epidemic spreading on a graph with $k=3$ very well separated communities and show that the community structure determines the outcome of an epidemic.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">6000</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+    <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">k</span><span class="p">):(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">k</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+
+<span class="n">β</span><span class="p">,</span> <span class="n">μ</span> <span class="o">=</span> <span class="mf">0.004</span><span class="p">,</span> <span class="mf">0.1</span>
+
+<span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">))</span><span class="o">*</span><span class="mf">0.2</span>
+<span class="n">probs</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">*</span><span class="mi">250</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">stochastic_block_model</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">probs</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">EoN</span><span class="o">.</span><span class="n">Gillespie_SIR</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">β</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">μ</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">initial_infecteds</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">return_full_data</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">###########</span>
+
+<span class="n">hitting_time</span><span class="p">,</span> <span class="n">lab</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">node_history</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">hitting_time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">node_history</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">lab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">lab</span><span class="p">,</span> <span class="n">hitting_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lab</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">hitting_time</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">hitting_time</span><span class="p">[</span><span class="n">lab</span> <span class="o">==</span> <span class="n">labels</span><span class="p">[</span><span class="n">r</span><span class="p">]],</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">density</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\delta(\ell_i, \ell_{\rm seed})$&#39;</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span>
+           <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#2a9d8f&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">hitting_time</span><span class="p">[</span><span class="n">lab</span> <span class="o">!=</span> <span class="n">labels</span><span class="p">[</span><span class="n">r</span><span class="p">]],</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">density</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$1-\delta(\ell_i, \ell_{\rm seed})$&#39;</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span>
+           <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#e76f51&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">12</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;hitting time&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">t</span><span class="p">(),</span> <span class="n">res</span><span class="o">.</span><span class="n">I</span><span class="p">()</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#6a994e&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;fraction of infected&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fig_directory</span><span class="si">}</span><span class="s1">sbm.pdf&#39;</span><span class="p">,</span> <span class="n">dpi</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5c9519e31184267ce6db14e264658da549e905e9b69e107bfed2db03e0a0add9.png" src="../_images/5c9519e31184267ce6db14e264658da549e905e9b69e107bfed2db03e0a0add9.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./05_sir"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../04_perc/percolation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Robustness</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-an-epidemic-spreading-on-a-graph">7.1. Running an epidemic spreading on a graph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#epidemic-threshold">7.2. Epidemic threshold</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#role-of-the-degree">7.3. Role of the degree</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vaccination">7.3.1. Vaccination</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-role-of-weak-ties">7.4. The role of weak ties</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">7.4.1. Vaccination</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-role-of-communities">7.5. The role of communities</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book Community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
