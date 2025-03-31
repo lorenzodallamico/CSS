@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Temporal networks &#8212; My sample book</title>
+    <title>9. Temporal networks &#8212; My sample book</title>
   
   
   
@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -63,6 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '03_temp/temp_rdn';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="8. Temporal networks" href="TemporalNet.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -113,8 +114,6 @@
     <div class="bd-container__inner bd-page-width">
       
       
-      
-        
       
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
@@ -189,6 +188,11 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Epidemics on networks</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../05_sir/SIR.html">7. Epidemic spreading on graphs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Temporal networks</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="TemporalNet.html">8. Temporal networks</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">9. Temporal networks</a></li>
 </ul>
 
     </div>
@@ -381,13 +385,9 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Temporal networks</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#activity-driven">Activity driven</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#activity-driven">9.1. Activity driven</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attractiveness-model">9.2. Attractiveness model</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#starnini">Starnini</a></li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -399,7 +399,7 @@
                 <article class="bd-article">
                   
   <section id="temporal-networks">
-<h1>Temporal networks<a class="headerlink" href="#temporal-networks" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">9. </span>Temporal networks<a class="headerlink" href="#temporal-networks" title="Link to this heading">#</a></h1>
 <p>In this notebook we show how to perform some basic operations on temporal graphs, reproducing the main plots appearing in the notes. Besides the classical packages, we will deploy some functions that are contained in the <code class="docutils literal notranslate"><span class="pre">Tnet.py</span></code> file whose content of this file is provided in the next notebook. If you want to run this notebook, create a folder named <code class="docutils literal notranslate"><span class="pre">src</span></code>, and add a file named <code class="docutils literal notranslate"><span class="pre">Tnet.py</span></code> with the codes insde of it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -414,7 +414,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 
-<span class="c1"># np.set_printoptions(legacy=&#39;1.25&#39;)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">legacy</span><span class="o">=</span><span class="s1">&#39;1.25&#39;</span><span class="p">)</span>
 
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">src.Tnet</span> <span class="kn">import</span> <span class="o">*</span>
@@ -423,98 +423,8 @@
 </div>
 </div>
 <section id="activity-driven">
-<h2>Activity driven<a class="headerlink" href="#activity-driven" title="Link to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ActivityDriven</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">η</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;Generates an instance of the activty driven model</span>
-<span class="sd">    </span>
-<span class="sd">    Use: dfttau, el = ActivityDriven(n, x, η, m, T)</span>
-<span class="sd">    </span>
-<span class="sd">    Inputs:</span>
-<span class="sd">        * n (int): number of nodes</span>
-<span class="sd">        * x (array): activity potentials</span>
-<span class="sd">        * η (float): activity parameter</span>
-<span class="sd">        * m (int): number of edges per node</span>
-<span class="sd">        * T (int): number of snapshots</span>
-
-<span class="sd">    Optional inputs:</span>
-<span class="sd">        *verbose (bool): is True (default) is prints the progress</span>
-
-<span class="sd">    Output:</span>
-<span class="sd">        * dfttau (pandas DataFrame): temporal graph in the format i, j, t, τ</span>
-<span class="sd">        * el (dictionary): The keys are edge (i,j) with i &lt; j and the entries are lists of lists in the format [t_i, t_f], where t_i denotes the beginning of an interaction and t_f the end. Note that t_f - t_i &gt;= 1. </span>
-<span class="sd">    &#39;&#39;&#39;</span>
-
-    <span class="c1"># initialize the dictionary containing the contact timelines of each edge. </span>
-    <span class="n">el</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="o">/</span><span class="n">T</span><span class="p">)</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="c1"># choose which nodes are active at a particular time-step</span>
-        <span class="n">active</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">η</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">active</span><span class="p">:</span>
-            <span class="c1"># select the neighbors of the active nodes and add the contacts</span>
-            <span class="c1"># choose the neighbor among all nodes except u</span>
-            <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="n">u</span><span class="p">])),</span> <span class="n">m</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
-                <span class="n">el</span> <span class="o">=</span> <span class="n">_add_contact</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-
-    <span class="c1"># convert to the ijttau format</span>
-    <span class="n">el_</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">el</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">e</span>
-        <span class="k">for</span> <span class="n">tt</span> <span class="ow">in</span> <span class="n">el</span><span class="p">[</span><span class="n">e</span><span class="p">]:</span>
-            <span class="n">el_</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">tt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">tt</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-
-    <span class="c1"># construct the dataframe in the form ijttau</span>
-    <span class="n">dfttau</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">el_</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;τ&#39;</span><span class="p">])</span>
-
-    <span class="k">return</span> <span class="n">dfttau</span><span class="p">,</span> <span class="n">el</span>
-
-
-<span class="k">def</span> <span class="nf">_add_contact</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;This function adds a contact to the dictionary el&#39;&#39;&#39;</span>
-
-    <span class="c1"># write the edge (u,v) so that u &lt; v</span>
-    <span class="n">e</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">])])</span>
-
-    
-    <span class="k">if</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">el</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="c1"># if the contact is ongoing, increase its duration</span>
-        <span class="k">if</span> <span class="n">el</span><span class="p">[</span><span class="n">e</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">:</span>
-            <span class="n">el</span><span class="p">[</span><span class="n">e</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="o">+</span><span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># if the contact is not ongoing create a new one</span>
-            <span class="n">el</span><span class="p">[</span><span class="n">e</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">t</span><span class="p">,</span> <span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
-    
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># if e is not in the dictionary, add it and set the contact duration to 1</span>
-        <span class="n">el</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[</span><span class="n">t</span><span class="p">,</span> <span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
-
-    <span class="k">return</span> <span class="n">el</span>
-
-
-<span class="k">def</span> <span class="nf">getInterEvent</span><span class="p">(</span><span class="n">el</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;This function computes the inter-event statistics from the dictionary el&#39;&#39;&#39;</span>
-
-    <span class="n">ied</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">el</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="n">e</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="n">e</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-                <span class="n">ied</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="n">e</span><span class="p">][</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">el</span><span class="p">[</span><span class="n">e</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
-
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ied</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
+<h2><span class="section-number">9.1. </span>Activity driven<a class="headerlink" href="#activity-driven" title="Link to this heading">#</a></h2>
+<p>Here we implement the activity driven model and show the degree, strength, event duration and inter-event duration distributions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># number of nodes</span>
@@ -555,7 +465,7 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Activity potential distribution
 </pre></div>
 </div>
-<img alt="../_images/5d7c572ab6c3c85a54963b01755e39e736fe14ce3476c4328f36e945e1cc5114.png" src="../_images/5d7c572ab6c3c85a54963b01755e39e736fe14ce3476c4328f36e945e1cc5114.png" />
+<img alt="../_images/1bd256e1be3c013528ed79ae8bbfd014344dd1fe4755f4b35da17442efb7a6a4.png" src="../_images/1bd256e1be3c013528ed79ae8bbfd014344dd1fe4755f4b35da17442efb7a6a4.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -576,13 +486,13 @@
 
 <span class="c1"># interevent distribution</span>
 <span class="n">ied</span> <span class="o">=</span> <span class="n">getInterEvent</span><span class="p">(</span><span class="n">el</span><span class="p">)</span>
-<span class="n">s</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ied</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ied</span><span class="p">)</span>
+<span class="n">s_</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ied</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ied</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Burstiness: </span><span class="si">{</span><span class="p">(</span><span class="n">s_</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">s_</span><span class="o">+</span><span class="n">m</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Burstiness: -0.15753030136770274
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Burstiness: -0.16079012489228814
 </pre></div>
 </div>
 </div>
@@ -631,102 +541,13 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;${\\rm log}(\\Delta \\tau)$&#39;)
-</pre></div>
-</div>
-<img alt="../_images/39fc6dd7f1c12938587b36eea277154d6e927fceea1d39480b19feaaf7646b2f.png" src="../_images/39fc6dd7f1c12938587b36eea277154d6e927fceea1d39480b19feaaf7646b2f.png" />
+<img alt="../_images/3adcc9888f95fd050709b2e8026e5bb340afea061448f6435a9d8162ffbc6b4e.png" src="../_images/3adcc9888f95fd050709b2e8026e5bb340afea061448f6435a9d8162ffbc6b4e.png" />
 </div>
 </div>
 </section>
-</section>
-<section id="starnini">
-<h1>Starnini<a class="headerlink" href="#starnini" title="Link to this heading">#</a></h1>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ActractivenessModel</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">rv</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;This function generates an instance of the attractiveness model</span>
-
-<span class="sd">    Use: dft, el = ActractivenessModel(n, L, a, rv, step, r, T, verbose = True)</span>
-<span class="sd">    </span>
-<span class="sd">    Inputs:</span>
-<span class="sd">        * n (int): number of nodes</span>
-<span class="sd">        * L (float): box size</span>
-<span class="sd">        * a (array): attractivity parameters</span>
-<span class="sd">        * rv (array): activity vector</span>
-<span class="sd">        * step (float): length of a step in the movement</span>
-<span class="sd">        * r (float): radius that defines proximity</span>
-<span class="sd">        * T (int): number of time-steps</span>
-
-<span class="sd">    Optional inputs:</span>
-<span class="sd">        * verbose (bool): if True (default) the function prints the the progress</span>
-
-<span class="sd">    Outputs:</span>
-<span class="sd">        * dfttau (pandas DataFrame): temporal graph in the format i, j, t, τ</span>
-<span class="sd">        * el (dictionary): The keys are edge (i,j) with i &lt; j and the entries are lists of lists in the format [t_i, t_f], where t_i denotes the beginning of an interaction and t_f the end. Note that t_f - t_i &gt;= 1. </span>
-<span class="sd">    &#39;&#39;&#39;</span>
-
-    <span class="c1"># initialize the positions of the agents</span>
-    <span class="n">xpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-    <span class="n">ypos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-
-    <span class="c1"># initialize the dictionary containing the contact timelines of each edge. The keys are edge (i,j) with i &lt; j and the entries are lists of lists in the format</span>
-    <span class="c1"># [t_i, t_f], where t_i denotes the beginning of an interaction and t_f the end. Note that t_f - t_i &gt;= 1.</span>
-    <span class="n">el</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">T</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="c1"># probability of not moving</span>
-        <span class="n">p_not_move</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-        <span class="c1"># identify active nodes</span>
-        <span class="n">active_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">active_nodes</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">active_nodes</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span>
-                    <span class="c1"># check the distance</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">xpos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">xpos</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">ypos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">ypos</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">:</span>
-                        
-                        <span class="c1"># add the temporal edge</span>
-                        <span class="n">el</span> <span class="o">=</span> <span class="n">_add_contact</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-
-                        <span class="c1"># update the probability of moving </span>
-                        <span class="n">p_not_move</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">p_not_move</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]])</span>
-                        <span class="n">p_not_move</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">p_not_move</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
-
-        <span class="c1"># move the agents</span>
-        <span class="n">move</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p_not_move</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">move</span><span class="p">))</span>
-        <span class="n">xpos</span><span class="p">[</span><span class="n">move</span><span class="p">]</span> <span class="o">+=</span> <span class="n">step</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-        <span class="n">ypos</span><span class="p">[</span><span class="n">move</span><span class="p">]</span> <span class="o">+=</span> <span class="n">step</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-
-        <span class="c1"># apply PBC</span>
-        <span class="n">xpos</span><span class="p">[</span><span class="n">xpos</span> <span class="o">&gt;</span> <span class="n">L</span><span class="p">]</span> <span class="o">-=</span> <span class="n">L</span>
-        <span class="n">xpos</span><span class="p">[</span><span class="n">xpos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">L</span>
-        <span class="n">ypos</span><span class="p">[</span><span class="n">ypos</span> <span class="o">&gt;</span> <span class="n">L</span><span class="p">]</span> <span class="o">-=</span> <span class="n">L</span>
-        <span class="n">ypos</span><span class="p">[</span><span class="n">ypos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">L</span>
-
-    <span class="c1"># convert to the ijttau format</span>
-    <span class="n">el_</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">el</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">e</span>
-        <span class="k">for</span> <span class="n">tt</span> <span class="ow">in</span> <span class="n">el</span><span class="p">[</span><span class="n">e</span><span class="p">]:</span>
-            <span class="n">el_</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">tt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">tt</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-
-    <span class="c1"># construct the dataframe in the form ijttau</span>
-    <span class="n">dfttau</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">el_</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;τ&#39;</span><span class="p">])</span>
-
-    <span class="k">return</span> <span class="n">dfttau</span><span class="p">,</span> <span class="n">el</span>
-
-        
-</pre></div>
-</div>
-</div>
-</div>
+<section id="attractiveness-model">
+<h2><span class="section-number">9.2. </span>Attractiveness model<a class="headerlink" href="#attractiveness-model" title="Link to this heading">#</a></h2>
+<p>Here we implement the attractiveness driven model and show the degree, strength, event duration and inter-event duration distributions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">500</span> <span class="c1"># number of nodes</span>
@@ -776,7 +597,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Burstiness: 0.4169060916169166
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Burstiness: 0.4251481036185934
 </pre></div>
 </div>
 </div>
@@ -825,9 +646,10 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/054676017da8cb5810c218b89024af16de06626f816f0949d4ce5478f4a0868a.png" src="../_images/054676017da8cb5810c218b89024af16de06626f816f0949d4ce5478f4a0868a.png" />
+<img alt="../_images/9c6712bd72f9598b6b8ade043f101d0c68a2f5efee3d39c99cff179d4eb2a293.png" src="../_images/9c6712bd72f9598b6b8ade043f101d0c68a2f5efee3d39c99cff179d4eb2a293.png" />
 </div>
 </div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -860,6 +682,15 @@
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="TemporalNet.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">8. </span>Temporal networks</p>
+      </div>
+    </a>
 </div>
                 </footer>
               
@@ -877,13 +708,9 @@
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Temporal networks</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#activity-driven">Activity driven</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#activity-driven">9.1. Activity driven</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attractiveness-model">9.2. Attractiveness model</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#starnini">Starnini</a></li>
-</ul>
-
   </nav></div>
 
 </div></div>
