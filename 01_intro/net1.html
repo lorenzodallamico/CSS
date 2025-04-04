@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>2. Loading a graph in Python &#8212; My sample book</title>
+    <title>2. Loading a graph in Python &#8212; Complessità nei sistemi sociali</title>
   
   
   
@@ -54,12 +54,15 @@
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '01_intro/net1';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -146,8 +149,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="My sample book - Home"/>
-    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="My sample book - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Complessità nei sistemi sociali - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Complessità nei sistemi sociali - Home"/>
   
   
 </a></div>
@@ -189,6 +192,15 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Epidemics on networks</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../05_sir/SIR.html">7. Epidemic spreading on graphs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Temporal networks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../03_temp/TemporalNet.html">8. Temporal networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_temp/temp_rdn.html">9. Temporal network models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Graph Fourier transform</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../06_GFT/GFT.html">10. Graph Fourier transform</a></li>
 </ul>
 
     </div>
@@ -402,7 +414,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="loading-a-graph-in-python">
+  <section class="tex2jax_ignore mathjax_ignore" id="loading-a-graph-in-python">
 <h1><span class="section-number">2. </span>Loading a graph in Python<a class="headerlink" href="#loading-a-graph-in-python" title="Link to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -498,7 +510,7 @@
 <h2><span class="section-number">2.2. </span>Preprocess the graph format<a class="headerlink" href="#preprocess-the-graph-format" title="Link to this heading">#</a></h2>
 <section id="nodes-id">
 <h3><span class="section-number">2.2.1. </span>Nodes’ id<a class="headerlink" href="#nodes-id" title="Link to this heading">#</a></h3>
-<p>Now we preprocess the nodes’ identities. This operation is not always necessary but it is a good custom. It can happen that the nodes’ identities inside a file are aribtrary numbers, codes or even names. The most convienent thing to do is to work with node identities that are integers between 0 and n-1 (we are using Python!), where $n$ is the number of nodes.</p>
+<p>Now we preprocess the nodes’ identities. This operation is not always necessary but it is a good custom. It can happen that the nodes’ identities inside a file are aribtrary numbers, codes or even names. The most convienent thing to do is to work with node identities that are integers between 0 and n-1 (we are using Python!), where <span class="math notranslate nohighlight">\(n\)</span> is the number of nodes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># exctract all nodes that appear in the network</span>
@@ -862,7 +874,7 @@
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Lorenzo Dall'Amico
 </p>
 
   </div>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>8. Temporal networks &#8212; My sample book</title>
+    <title>8. Temporal networks &#8212; Complessità nei sistemi sociali</title>
   
   
   
@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -54,16 +54,19 @@
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '03_temp/TemporalNet';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="9. Temporal networks" href="temp_rdn.html" />
+    <link rel="next" title="9. Temporal network models" href="temp_rdn.html" />
     <link rel="prev" title="7. Epidemic spreading on graphs" href="../05_sir/SIR.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -146,8 +149,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="My sample book - Home"/>
-    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="My sample book - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Complessità nei sistemi sociali - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Complessità nei sistemi sociali - Home"/>
   
   
 </a></div>
@@ -193,7 +196,11 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Temporal networks</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">8. Temporal networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="temp_rdn.html">9. Temporal networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="temp_rdn.html">9. Temporal network models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Graph Fourier transform</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../06_GFT/GFT.html">10. Graph Fourier transform</a></li>
 </ul>
 
     </div>
@@ -401,7 +408,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="temporal-networks">
+  <section class="tex2jax_ignore mathjax_ignore" id="temporal-networks">
 <h1><span class="section-number">8. </span>Temporal networks<a class="headerlink" href="#temporal-networks" title="Link to this heading">#</a></h1>
 <p>In this notebook we show how to perform some basic operations on temporal graphs, reproducing the main plots appearing in the notes. Besides the classical packages, we will deploy some functions that are contained in the <code class="docutils literal notranslate"><span class="pre">Tnet.py</span></code> file whose content of this file is provided in the next notebook. If you want to run this notebook, create a folder named <code class="docutils literal notranslate"><span class="pre">src</span></code>, and add a file named <code class="docutils literal notranslate"><span class="pre">Tnet.py</span></code> with the codes insde of it.</p>
 <div class="cell docutils container">
@@ -669,7 +676,7 @@
 </table>
 </div></div></div>
 </div>
-<p>In the dataframe <code class="docutils literal notranslate"><span class="pre">df</span></code> we built, we removed the column <code class="docutils literal notranslate"><span class="pre">t</span></code> and substituted encoded in <code class="docutils literal notranslate"><span class="pre">w</span></code> the number of appearances of a single link. We now build a weighted adjacency matrix of this graph using the <code class="docutils literal notranslate"><span class="pre">scipy</span></code> package and then passing it to <code class="docutils literal notranslate"><span class="pre">networkx</span></code> to obtain the graph. To do so, we must first create a dictionary that converts the indices contained in <code class="docutils literal notranslate"><span class="pre">df</span></code> into integers between $1$ and $n$, where $n$ is the number of nodes.</p>
+<p>In the dataframe <code class="docutils literal notranslate"><span class="pre">df</span></code> we built, we removed the column <code class="docutils literal notranslate"><span class="pre">t</span></code> and substituted encoded in <code class="docutils literal notranslate"><span class="pre">w</span></code> the number of appearances of a single link. We now build a weighted adjacency matrix of this graph using the <code class="docutils literal notranslate"><span class="pre">scipy</span></code> package and then passing it to <code class="docutils literal notranslate"><span class="pre">networkx</span></code> to obtain the graph. To do so, we must first create a dictionary that converts the indices contained in <code class="docutils literal notranslate"><span class="pre">df</span></code> into integers between <span class="math notranslate nohighlight">\(1\)</span> and <span class="math notranslate nohighlight">\(n\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is the number of nodes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># make a list of all nodes</span>
@@ -810,7 +817,7 @@
 </section>
 <section id="reachability">
 <h2><span class="section-number">8.2. </span>Reachability<a class="headerlink" href="#reachability" title="Link to this heading">#</a></h2>
-<p>As we mentioned in the course, the reachability (<em>i.e</em> the fraction of nodes that can be reached by a walk on a graph as a function of time) is small in temporal graphs than it is on static ones. Here we consider $4$ <a class="reference external" href="http://www.sociopatterns.org/datasets/">SocioPatterns</a> and, for each of them, we compare the reachability over the first $8$ hours of measurement for the temporal graph and its aggregated counterpart.</p>
+<p>As we mentioned in the course, the reachability (<em>i.e</em> the fraction of nodes that can be reached by a walk on a graph as a function of time) is small in temporal graphs than it is on static ones. Here we consider <span class="math notranslate nohighlight">\(4\)</span> <a class="reference external" href="http://www.sociopatterns.org/datasets/">SocioPatterns</a> and, for each of them, we compare the reachability over the first <span class="math notranslate nohighlight">\(8\)</span> hours of measurement for the temporal graph and its aggregated counterpart.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="mi">1440</span> <span class="c1"># 8 hours (8*3600/20)</span>
@@ -989,8 +996,8 @@ Progress: 99%
 </section>
 <section id="burstiness">
 <h2><span class="section-number">8.4. </span>Burstiness<a class="headerlink" href="#burstiness" title="Link to this heading">#</a></h2>
-<p>We now visualize the effect of burstiness. We take the <code class="docutils literal notranslate"><span class="pre">Conference</span></code> network and select one of its nodes $i$ and look at the temporal series of its interaction times. We then show a simple modeled quantity $\mathscr{Q}$ that increases by one for every contact $i$ has and decreases by the $3%$ at each time stamp in which there is no interaction.</p>
-<p>We compare the results with sythetic generated data in which the temporal series is obtained from a Poisson process. The results show that, even though the number of contact events is very similar, $\mathscr{Q}$ reaches much larger values for the bursty dynamics.</p>
+<p>We now visualize the effect of burstiness. We take the <code class="docutils literal notranslate"><span class="pre">Conference</span></code> network and select one of its nodes <span class="math notranslate nohighlight">\(i\)</span> and look at the temporal series of its interaction times. We then show a simple modeled quantity <span class="math notranslate nohighlight">\(\mathscr{Q}\)</span> that increases by one for every contact <span class="math notranslate nohighlight">\(i\)</span> has and decreases by the <span class="math notranslate nohighlight">\(3\%\)</span> at each time stamp in which there is no interaction.</p>
+<p>We compare the results with sythetic generated data in which the temporal series is obtained from a Poisson process. The results show that, even though the number of contact events is very similar, <span class="math notranslate nohighlight">\(\mathscr{Q}\)</span> reaches much larger values for the bursty dynamics.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># model parameters</span>
@@ -1185,7 +1192,7 @@ Burstiness: B = 0.6981801093753959
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">9. </span>Temporal networks</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>Temporal network models</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1224,7 +1231,7 @@ Burstiness: B = 0.6981801093753959
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Lorenzo Dall'Amico
 </p>
 
   </div>

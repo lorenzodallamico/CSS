@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7. Epidemic spreading on graphs &#8212; My sample book</title>
+    <title>7. Epidemic spreading on graphs &#8212; Complessità nei sistemi sociali</title>
   
   
   
@@ -54,15 +54,19 @@
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '05_sir/SIR';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="8. Temporal networks" href="../03_temp/TemporalNet.html" />
     <link rel="prev" title="6. Robustness" href="../04_perc/percolation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -145,8 +149,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="My sample book - Home"/>
-    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="My sample book - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Complessità nei sistemi sociali - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Complessità nei sistemi sociali - Home"/>
   
   
 </a></div>
@@ -188,6 +192,15 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Epidemics on networks</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">7. Epidemic spreading on graphs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Temporal networks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../03_temp/TemporalNet.html">8. Temporal networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_temp/temp_rdn.html">9. Temporal network models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Graph Fourier transform</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../06_GFT/GFT.html">10. Graph Fourier transform</a></li>
 </ul>
 
     </div>
@@ -402,7 +415,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="epidemic-spreading-on-graphs">
+  <section class="tex2jax_ignore mathjax_ignore" id="epidemic-spreading-on-graphs">
 <h1><span class="section-number">7. </span>Epidemic spreading on graphs<a class="headerlink" href="#epidemic-spreading-on-graphs" title="Link to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -438,7 +451,7 @@ pip<span class="w"> </span>install<span class="w"> </span>EoN
 </div></blockquote>
 <section id="running-an-epidemic-spreading-on-a-graph">
 <h2><span class="section-number">7.1. </span>Running an epidemic spreading on a graph<a class="headerlink" href="#running-an-epidemic-spreading-on-a-graph" title="Link to this heading">#</a></h2>
-<p>To run a simulation of an epidemic spreading on a graph, we use the <code class="docutils literal notranslate"><span class="pre">EoN</span></code> (epidemics on networks) package which provides very efficient packages to do so. We first consider an Erdos-Renyi random graph and look at the curves $S_(t), I(t), R(t)$.</p>
+<p>To run a simulation of an epidemic spreading on a graph, we use the <code class="docutils literal notranslate"><span class="pre">EoN</span></code> (epidemics on networks) package which provides very efficient packages to do so. We first consider an Erdos-Renyi random graph and look at the curves <span class="math notranslate nohighlight">\(S_(t), I(t), R(t)\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># size and avreage degree</span>
@@ -486,7 +499,7 @@ pip<span class="w"> </span>install<span class="w"> </span>EoN
 </section>
 <section id="epidemic-threshold">
 <h2><span class="section-number">7.2. </span>Epidemic threshold<a class="headerlink" href="#epidemic-threshold" title="Link to this heading">#</a></h2>
-<p>We analyze the epidemic burden (i.e. the fraction of individuals that at the end of the spreading are not susceptible and hence that were hit by the epidemic) as a function of the transmissibility parameter. We consider a dense and a sparse graph from the configuration model and we infect $20$ nodes at the beginning with a probability proportional to their degree. This is to ensure a vanishing probabability that the epidemic dies out if the parameters $\beta$ and $\mu$ are so that $R_0 &gt; 1$.</p>
+<p>We analyze the epidemic burden (i.e. the fraction of individuals that at the end of the spreading are not susceptible and hence that were hit by the epidemic) as a function of the transmissibility parameter. We consider a dense and a sparse graph from the configuration model and we infect <span class="math notranslate nohighlight">\(20\)</span> nodes at the beginning with a probability proportional to their degree. This is to ensure a vanishing probabability that the epidemic dies out if the parameters <span class="math notranslate nohighlight">\(\beta\)</span> and <span class="math notranslate nohighlight">\(\mu\)</span> are so that <span class="math notranslate nohighlight">\(R_0 &gt; 1\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">###########################################</span>
@@ -728,7 +741,7 @@ pip<span class="w"> </span>install<span class="w"> </span>EoN
 </section>
 <section id="the-role-of-weak-ties">
 <h2><span class="section-number">7.4. </span>The role of weak ties<a class="headerlink" href="#the-role-of-weak-ties" title="Link to this heading">#</a></h2>
-<p>We repeat the experiment on a set of Watts-Strogatz random graphs for different rewiring probabilities $p$.</p>
+<p>We repeat the experiment on a set of Watts-Strogatz random graphs for different rewiring probabilities <span class="math notranslate nohighlight">\(p\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">50000</span>
@@ -777,11 +790,12 @@ pip<span class="w"> </span>install<span class="w"> </span>EoN
 </div>
 <section id="id1">
 <h3><span class="section-number">7.4.1. </span>Vaccination<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
-<p>In this case we compute the overlap for each edge $(ij)$ as</p>
-<p>\begin{align}
+<p>In this case we compute the overlap for each edge <span class="math notranslate nohighlight">\((ij)\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
 O_{ij} = \frac{|\partial_i\cap\partial_j|}{|\partial_i\cup\partial_j|}
-\end{align}</p>
-<p>and assign to each node a score $s_i = {\rm min}<em>j O</em>{ij}$. A low $s_i$ implies that the node $i$ has a weak tie. From this, we vaccinate nodes with a probability proportional to $1/s_i$ and compare the results with targeted vaccination.</p>
+\]</div>
+<p>and assign to each node a score <span class="math notranslate nohighlight">\(s_i = {\rm min}_j O_{ij}\)</span>. A low <span class="math notranslate nohighlight">\(s_i\)</span> implies that the node <span class="math notranslate nohighlight">\(i\)</span> has a weak tie. From this, we vaccinate nodes with a probability proportional to <span class="math notranslate nohighlight">\(1/s_i\)</span> and compare the results with targeted vaccination.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate the graph</span>
@@ -840,7 +854,7 @@ O_{ij} = \frac{|\partial_i\cap\partial_j|}{|\partial_i\cup\partial_j|}
 </section>
 <section id="the-role-of-communities">
 <h2><span class="section-number">7.5. </span>The role of communities<a class="headerlink" href="#the-role-of-communities" title="Link to this heading">#</a></h2>
-<p>We now run a simulation of an epidemic spreading on a graph with $k=3$ very well separated communities and show that the community structure determines the outcome of an epidemic.</p>
+<p>We now run a simulation of an epidemic spreading on a graph with <span class="math notranslate nohighlight">\(k=3\)</span> very well separated communities and show that the community structure determines the outcome of an epidemic.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">6000</span>
@@ -948,6 +962,15 @@ O_{ij} = \frac{|\partial_i\cap\partial_j|}{|\partial_i\cup\partial_j|}
         <p class="prev-next-title"><span class="section-number">6. </span>Robustness</p>
       </div>
     </a>
+    <a class="right-next"
+       href="../03_temp/TemporalNet.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">8. </span>Temporal networks</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -990,7 +1013,7 @@ O_{ij} = \frac{|\partial_i\cap\partial_j|}{|\partial_i\cup\partial_j|}
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Lorenzo Dall'Amico
 </p>
 
   </div>
