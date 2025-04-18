@@ -205,6 +205,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Community detection</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../07_CD/CD.html">11. Community detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07_CD/Spectral_Clustering.html">12. Spectral clustering</a></li>
 </ul>
 
     </div>
@@ -745,9 +746,10 @@
 <section id="the-strength-of-weak-ties">
 <h3><span class="section-number">6.2.2. </span>The strength of weak ties<a class="headerlink" href="#the-strength-of-weak-ties" title="Link to this heading">#</a></h3>
 <p>We suppose to attack the network by removing random edges, or the edges with highest or lowest overlap and see the effect it has on the overall adoption. We recall that the overlap is defined as</p>
-<p>\begin{align}
+<div class="math notranslate nohighlight">
+\[
 O_{(ij)} = \frac{|\partial_i\cap\partial_j|}{|\partial_i\cup\partial_j|}
-\end{align}</p>
+\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># number of nodes</span>
